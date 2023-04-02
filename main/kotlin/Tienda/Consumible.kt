@@ -37,7 +37,7 @@ class Consumible {
 
     //Inicio de la lista de compras
 
-    val listaCompras = mutableMapOf<String, Double>()
+    val listaCompras = mutableListOf<Pair<String,Double>>()
 
 /*    Funcion que agrega productos a la lista
     con una cadena ingresada busca en el mapa ProductPair
@@ -52,12 +52,14 @@ class Consumible {
 
                 println("¿De que tamaño quiere su producto:  $producto")
                 var tamano = readln()?: "Chico"
-
+                //se hace la búsqueda del precio del producto
                 var price = ProductPair[producto]?.get(tamano.toUpperCase().get(0).toString())?: 0.0
-                println("$producto tamaño:  ${tamano.toUpperCase()}   precio: $price" )
-
-                listaCompras.put("$producto $tamano", price)
-                println("Producto: $producto tamaño $tamano agregado\n")
+                println("$producto tamano :  ${tamano.toUpperCase()}   precio: $price" )
+                //inicio de los pares que formarán la listaCompras
+                var primero = "$producto $tamano"
+                var segundo = price
+                listaCompras.add(Pair<String,Double>( first = primero  , second = segundo))
+                println("Producto: $producto tamano -> $tamano agregado\n")
 
 
             }else { println("No se reconoce el producto, intente de nuevo\n") }
@@ -67,29 +69,37 @@ class Consumible {
     /*Funcion para borrar productos de la lista
     ingresa el nombre del producto <String> en
     la lista de compras para eliminarlo*/
+    fun borrarProducto(indice:Int){
 
+        listaCompras.removeAt(indice-1)
 
-    fun borrarProducto(producto: String){
-        listaCompras.remove(producto)
-        println("Producto Borrado")
-        println("Algún otro producto")
+        println("Producto Borrado\n")
+        println("Nueva lista $listaCompras \n")
+        println("¿Algún otro producto?")
     }
 
 
 
-
+    //pedir la orden hecha hasta ahora
     fun orden(){
        println(" Su pedido es el siguiente... \n")
-        for((producto,precio) in listaCompras){
-            println("$producto   $ $precio")
+        var i = 1
+        for(par in listaCompras){
+            println("$i -> $par  ")
+            i++
         }
+       totalCompraTienda()
     }
 
-    fun imprimirTicket(){
-        println("Cines BEDU")
-        orden()
+    //Calculo del total de Compras, regresa un Double
+    fun getTotalTienda():Double{
+        var total = 0.0
+        for(par in listaCompras){ total += par.second }
+        return total
+    }
 
-        println()
-        println("Total ${listaCompras.values}")
+    //impresión del total del producto
+    fun totalCompraTienda(){
+       println("El total es de:  ${getTotalTienda()}")
     }
 }
